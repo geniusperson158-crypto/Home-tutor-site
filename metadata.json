@@ -1,0 +1,6 @@
+{
+  "name": "TutorNest - Premium Home Tutoring Navi Mumbai",
+  "description": "Discover trusted home tutors across Navi Mumbai for personalized 1-on-1 learning, building confidence and academic excellence right at your doorstep.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
