@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Search, Filter, X, RotateCcw, AlertCircle, ArrowUpDown } from 'lucide-react';
-import { Tutor, FilterState } from '../types';
+import { Tutor } from '../types';
 import { TUTORS_DATA } from '../data/tutors';
 import { SUBJECTS_DATA } from '../data/subjects';
 import { BRAND_CONFIG } from '../config/brand';
@@ -11,7 +11,7 @@ interface FindTutorsViewProps {
   initialGrade?: string;
   initialLocation?: string;
   initialMode?: string;
-  onViewProfile: (tutor: Tutor) => void;
+  onViewProfile?: (tutor: Tutor) => void;
   onRequestDemo: (tutor: Tutor) => void;
 }
 
@@ -20,32 +20,29 @@ export const FindTutorsView: React.FC<FindTutorsViewProps> = ({
   initialGrade = '',
   initialLocation = '',
   initialMode = 'all',
-  onViewProfile,
   onRequestDemo
 }) => {
-  const [filters, setFilters] = useState<FilterState>({
+  const [filters, setFilters] = useState({
     searchQuery: '',
     subject: initialSubject,
     grade: initialGrade,
     location: initialLocation,
-    mode: (initialMode as any) || 'all',
-    maxRate: 1500,
+    mode: initialMode || 'all',
     minExperience: 0,
     sortBy: 'rating'
   });
 
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
-  // Filter & sort logic
+  // Filter & sort logic (no fee filters or rates)
   const filteredTutors = useMemo(() => {
     return TUTORS_DATA.filter((tutor) => {
-      // Search query matches name, subject, or bio
+      // Search query matches subject or grade
       if (filters.searchQuery.trim()) {
         const q = filters.searchQuery.toLowerCase();
-        const matchesName = tutor.name.toLowerCase().includes(q);
         const matchesSubject = tutor.subjects.some(s => s.toLowerCase().includes(q));
-        const matchesBio = tutor.bio.toLowerCase().includes(q);
-        if (!matchesName && !matchesSubject && !matchesBio) return false;
+        const matchesGrade = tutor.gradesTaught.some(g => g.toLowerCase().includes(q));
+        if (!matchesSubject && !matchesGrade) return false;
       }
 
       // Subject filter
@@ -69,23 +66,10 @@ export const FindTutorsView: React.FC<FindTutorsViewProps> = ({
         if (filters.mode === 'online' && tutor.mode === 'home') return false;
       }
 
-      // Max Rate
-      if (tutor.hourlyRate > filters.maxRate) {
-        return false;
-      }
-
-      // Min Experience
-      if (tutor.experienceYears < filters.minExperience) {
-        return false;
-      }
-
       return true;
     }).sort((a, b) => {
-      if (filters.sortBy === 'rating') return b.rating - a.rating;
-      if (filters.sortBy === 'price-asc') return a.hourlyRate - b.hourlyRate;
-      if (filters.sortBy === 'price-desc') return b.hourlyRate - a.hourlyRate;
       if (filters.sortBy === 'experience') return b.experienceYears - a.experienceYears;
-      return 0;
+      return b.rating - a.rating;
     });
   }, [filters]);
 
@@ -96,7 +80,6 @@ export const FindTutorsView: React.FC<FindTutorsViewProps> = ({
       grade: '',
       location: '',
       mode: 'all',
-      maxRate: 1500,
       minExperience: 0,
       sortBy: 'rating'
     });
@@ -107,9 +90,7 @@ export const FindTutorsView: React.FC<FindTutorsViewProps> = ({
     filters.subject !== '' ||
     filters.grade !== '' ||
     filters.location !== '' ||
-    filters.mode !== 'all' ||
-    filters.maxRate < 1500 ||
-    filters.minExperience > 0;
+    filters.mode !== 'all';
 
   return (
     <div className="py-10 bg-slate-50/50 min-h-screen">
@@ -118,13 +99,13 @@ export const FindTutorsView: React.FC<FindTutorsViewProps> = ({
         {/* Page Title & Context */}
         <div className="mb-8">
           <div className="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-2">
-            Verified Tutor Directory
+            Curriculum & Grade Tutoring
           </div>
           <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-            Find Your Ideal Home Tutor
+            Subjects & Grade Tutoring Programs
           </h1>
           <p className="text-sm text-slate-600 mt-1 max-w-2xl">
-            Browse verified educators across Navi Mumbai nodes (Vashi, Nerul, Kharghar, Seawoods, Belapur & more), compare credentials, and schedule an in-home trial session.
+            Browse structured 1-on-1 home tutoring programs across Navi Mumbai (Vashi, Nerul, Kharghar, Seawoods, Belapur & more). Select your subject and grade to request an in-home trial session.
           </p>
         </div>
 
@@ -136,7 +117,7 @@ export const FindTutorsView: React.FC<FindTutorsViewProps> = ({
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search by tutor name, subject (e.g., Calculus, Organic Chemistry), or topic..."
+              placeholder="Search by subject (e.g., Mathematics, Physics, Chemistry) or grade..."
               value={filters.searchQuery}
               onChange={(e) => setFilters({ ...filters, searchQuery: e.target.value })}
               className="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 text-slate-800 placeholder:text-slate-400"
@@ -156,17 +137,15 @@ export const FindTutorsView: React.FC<FindTutorsViewProps> = ({
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 text-xs font-medium text-slate-600">
               <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
-              <label htmlFor="sort-tutors" className="whitespace-nowrap">Sort by:</label>
+              <label htmlFor="sort-programs" className="whitespace-nowrap">Sort by:</label>
               <select
-                id="sort-tutors"
+                id="sort-programs"
                 value={filters.sortBy}
-                onChange={(e) => setFilters({ ...filters, sortBy: e.target.value as any })}
+                onChange={(e) => setFilters({ ...filters, sortBy: e.target.value })}
                 className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-600 cursor-pointer"
               >
-                <option value="rating">Highest Rated</option>
-                <option value="price-asc">Fee: Low to High</option>
-                <option value="price-desc">Fee: High to Low</option>
-                <option value="experience">Most Experienced</option>
+                <option value="rating">Recommended Programs</option>
+                <option value="experience">Advanced Curriculum Level</option>
               </select>
             </div>
 
@@ -180,7 +159,7 @@ export const FindTutorsView: React.FC<FindTutorsViewProps> = ({
           </div>
         </div>
 
-        {/* 2-Column Layout: Sidebar Filters + Tutor Grid */}
+        {/* 2-Column Layout: Sidebar Filters + Program Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           
           {/* Filter Sidebar (Desktop & Mobile Drawer) */}
@@ -190,7 +169,7 @@ export const FindTutorsView: React.FC<FindTutorsViewProps> = ({
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2 text-sm font-bold text-slate-900">
                   <Filter className="w-4 h-4 text-blue-600" />
-                  <span>Refine Tutors</span>
+                  <span>Refine Programs</span>
                 </div>
                 {hasActiveFilters && (
                   <button
@@ -233,12 +212,12 @@ export const FindTutorsView: React.FC<FindTutorsViewProps> = ({
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:border-blue-600 cursor-pointer"
                 >
                   <option value="">All Classes</option>
+                  <option value="Grade 1-5">Grade 1-5 (Primary)</option>
                   <option value="Grade 6-8">Grade 6-8 (Middle School)</option>
                   <option value="Grade 8-10">Grade 8-10 (Early High)</option>
-                  <option value="Grade 9-10">Grade 9-10</option>
+                  <option value="Grade 9-10">Grade 9-10 (High School)</option>
                   <option value="Grade 11-12">Grade 11-12 (Senior High)</option>
                   <option value="AP / SAT Prep">AP & SAT Prep</option>
-                  <option value="College Prep">College Prep</option>
                 </select>
               </div>
 
@@ -303,79 +282,34 @@ export const FindTutorsView: React.FC<FindTutorsViewProps> = ({
                 </div>
               </div>
 
-              {/* Max Hourly Rate */}
-              <div>
-                <div className="flex items-center justify-between text-xs font-bold text-slate-700 mb-2">
-                  <span>Max Hourly Fee</span>
-                  <span className="text-blue-600 font-extrabold tabular-nums">₹{filters.maxRate}/hr</span>
-                </div>
-                <input
-                  type="range"
-                  min="500"
-                  max="1500"
-                  step="50"
-                  value={filters.maxRate}
-                  onChange={(e) => setFilters({ ...filters, maxRate: Number(e.target.value) })}
-                  className="w-full accent-blue-600 cursor-pointer"
-                />
-                <div className="flex justify-between text-[11px] text-slate-400 mt-1">
-                  <span>₹500</span>
-                  <span>₹1000</span>
-                  <span>₹1500+</span>
-                </div>
-              </div>
-
-              {/* Minimum Teaching Experience */}
-              <div>
-                <div className="flex items-center justify-between text-xs font-bold text-slate-700 mb-2">
-                  <span>Min Experience</span>
-                  <span className="text-blue-600 font-extrabold tabular-nums">{filters.minExperience}+ yrs</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="10"
-                  step="2"
-                  value={filters.minExperience}
-                  onChange={(e) => setFilters({ ...filters, minExperience: Number(e.target.value) })}
-                  className="w-full accent-blue-600 cursor-pointer"
-                />
-                <div className="flex justify-between text-[11px] text-slate-400 mt-1">
-                  <span>Any</span>
-                  <span>4 yrs</span>
-                  <span>10+ yrs</span>
-                </div>
-              </div>
-
               {/* Quality & Safety Check */}
               <div className="pt-3 border-t border-slate-100 text-xs text-slate-500 space-y-1">
                 <div className="font-semibold text-slate-700">Tutor Verification Guarantee</div>
                 <p className="text-[11px] leading-relaxed">
-                  All profiles pass manual credential checks, criminal history vetting, and demo lesson audits before active listing.
+                  All tutors assigned to students pass academic transcript audits, safety background vetting, and pedagogical evaluations.
                 </p>
               </div>
 
             </div>
           </aside>
 
-          {/* Main Tutor Results Column */}
+          {/* Main Results Column */}
           <main className="lg:col-span-3">
             
             {/* Results Count & Active Filters Summary */}
             <div className="flex items-center justify-between gap-4 mb-4">
               <div className="text-xs font-semibold text-slate-600">
-                Showing <span className="text-slate-900 font-bold tabular-nums">{filteredTutors.length}</span> verified educators
+                Showing <span className="text-slate-900 font-bold tabular-nums">{filteredTutors.length}</span> academic tutoring programs
               </div>
             </div>
 
-            {/* Tutor Grid */}
+            {/* Programs Grid */}
             {filteredTutors.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {filteredTutors.map((tutor) => (
                   <TutorCard
                     key={tutor.id}
                     tutor={tutor}
-                    onViewProfile={onViewProfile}
                     onRequestDemo={onRequestDemo}
                   />
                 ))}
@@ -387,10 +321,10 @@ export const FindTutorsView: React.FC<FindTutorsViewProps> = ({
                   <AlertCircle className="w-6 h-6" />
                 </div>
                 <h3 className="text-lg font-bold text-slate-900 mb-1">
-                  No tutors match your exact criteria
+                  No programs match your exact criteria
                 </h3>
                 <p className="text-sm text-slate-500 max-w-md mx-auto mb-6">
-                  Try broadening your location radius, adjusting max budget, or resetting filters to see all available educators in nearby zones.
+                  Try broadening your location radius or selecting another subject or grade to explore all available tutoring options.
                 </p>
                 <button
                   onClick={resetFilters}

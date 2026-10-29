@@ -162,7 +162,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ onFindTutors, onJoinAsTuto
               onClick={onFindTutors}
               className="px-6 py-3 text-xs font-semibold text-slate-900 bg-white hover:bg-slate-100 rounded-xl transition-all shadow-sm cursor-pointer"
             >
-              Browse Verified Tutors
+              Explore Tutoring Programs
             </button>
             <button
               onClick={onJoinAsTutor}

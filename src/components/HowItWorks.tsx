@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ClipboardList, Search, CalendarCheck, TrendingUp, CheckCircle, ArrowRight } from 'lucide-react';
+import { ClipboardList, CalendarCheck, TrendingUp, CheckCircle, ArrowRight } from 'lucide-react';
 
 interface HowItWorksProps {
   onFindTutor?: () => void;
@@ -18,18 +18,12 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ onBecomeTutor }) => {
     },
     {
       num: "02",
-      icon: Search,
-      title: "Discover Suitable Tutors",
-      description: "Compare verified academic credentials, verified background check records, parent reviews, and hourly rates."
-    },
-    {
-      num: "03",
       icon: CalendarCheck,
       title: "Connect & Schedule a Demo",
       description: "Book an introductory 45-minute in-home demo class to evaluate teaching style and compatibility firsthand."
     },
     {
-      num: "04",
+      num: "03",
       icon: TrendingUp,
       title: "Start Personalized Learning",
       description: "Begin structured weekly sessions with custom learning milestones and transparent parent progress reports."
@@ -45,18 +39,12 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ onBecomeTutor }) => {
     },
     {
       num: "02",
-      icon: Search,
-      title: "Pass Credential & Safety Vetting",
-      description: "Our academic committee verifies university transcripts, conducts identity checks, and runs safety screenings."
+      icon: CalendarCheck,
+      title: "Pass Vetting & Audition",
+      description: "Our academic committee verifies credentials and conducts a short pedagogical lesson evaluation."
     },
     {
       num: "03",
-      icon: CalendarCheck,
-      title: "Complete Teaching Audition",
-      description: "Demonstrate your pedagogical technique in a short simulated lesson with our senior subject specialist."
-    },
-    {
-      num: "04",
       icon: TrendingUp,
       title: "Receive Local Inquiries",
       description: "Get matched with committed local students, set your own availability, and teach right in your community."
@@ -106,8 +94,8 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ onBecomeTutor }) => {
           </div>
         </div>
 
-        {/* 4 Steps Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+        {/* 3 Steps Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
           {currentSteps.map((step, idx) => {
             const Icon = step.icon;
             return (
@@ -126,18 +114,14 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ onBecomeTutor }) => {
                     </div>
                   </div>
 
-                  <h3 className="text-base font-bold text-slate-900 mb-2">
+                  <h3 className="text-base font-bold text-slate-900">
                     {step.title}
                   </h3>
-
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    {step.description}
-                  </p>
                 </div>
 
                 <div className="mt-6 pt-4 border-t border-slate-200/60 flex items-center gap-1.5 text-[11px] font-medium text-slate-500">
                   <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Step {idx + 1} of 4</span>
+                  <span>Step {idx + 1} of {currentSteps.length}</span>
                 </div>
               </div>
             );

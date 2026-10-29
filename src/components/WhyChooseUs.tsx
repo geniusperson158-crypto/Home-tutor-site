@@ -13,8 +13,8 @@ import {
 export const WhyChooseUs: React.FC = () => {
   const benefits = [
     {
-      title: "Verified Tutor Profiles",
-      description: "Rigorous 4-tier screening, academic credential verification, and nationwide background checks for total peace of mind.",
+      title: "Certified & Vetted Educators",
+      description: "Rigorous 4-tier screening, academic credential verification, and safety vetting for total peace of mind.",
       icon: ShieldCheck,
       color: "text-blue-600 bg-blue-50"
     },
@@ -31,8 +31,8 @@ export const WhyChooseUs: React.FC = () => {
       color: "text-sky-600 bg-sky-50"
     },
     {
-      title: "Transparent, Upfront Pricing",
-      description: "No hidden subscription traps or unannounced match fees. Clear hourly rates and discounted semester packages.",
+      title: "Customized Learning Plans",
+      description: "Tailored weekly schedule and milestone curriculum benchmarks designed around your student's school exams with a complimentary demo.",
       icon: BadgeDollarSign,
       color: "text-emerald-600 bg-emerald-50"
     },

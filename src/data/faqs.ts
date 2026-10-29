@@ -10,7 +10,7 @@ export const FAQS_DATA: FAQItem[] = [
     id: "faq-01",
     category: "Parents & Students",
     question: "How do I find a home tutor in Navi Mumbai?",
-    answer: "You can request verified tutors across Navi Mumbai nodes (Vashi, Nerul, Kharghar, Belapur, Seawoods, Airoli, and more) by selecting your subject and student's class. Compare verified profiles, credentials, and teaching experience. Once ready, click 'Request a Demo' to schedule an introductory trial session directly at your home."
+    answer: "You can request verified tutors across Navi Mumbai nodes (Vashi, Nerul, Kharghar, Belapur, Seawoods, Airoli, and more) by selecting your subject and student's class. Our academic admissions team matches a certified subject educator and schedules an introductory trial session directly at your home."
   },
   {
     id: "faq-02",
@@ -39,8 +39,8 @@ export const FAQS_DATA: FAQItem[] = [
   {
     id: "faq-06",
     category: "Safety & Billing",
-    question: "How are tutoring fees determined?",
-    answer: "Tutor rates are completely transparent. Rates typically range between ₹500 and ₹1,000 per hour depending on the tutor's postgraduate qualifications, board exam experience (CBSE, ICSE, State Board), and curriculum tier. We offer both pay-as-you-go hourly billing and discounted monthly packages with no hidden matching fees."
+    question: "How does the home tutoring process work?",
+    answer: "The process is simple and transparent. After you submit your student's subject, grade level, and location, our academic team assigns a qualified specialist. We schedule a complimentary 45-minute in-home trial session first, with zero advance commitment. Customized ongoing study plans are then arranged directly based on your student's weekly goals."
   },
   {
     id: "faq-07",

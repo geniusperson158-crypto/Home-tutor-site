@@ -111,7 +111,7 @@ export const BookingRequestModal: React.FC<BookingRequestModalProps> = ({
               {formData.isDemoClass ? 'Request a Free Home Demo Class' : 'Schedule Tutoring Consultation'}
             </h2>
             <p className="text-xs text-slate-500">
-              {selectedTutor ? `Target Educator: ${selectedTutor.name}` : 'Connect with a matched subject specialist'}
+              Connect with a certified subject specialist for {formData.subject}
             </p>
           </div>
           <button
@@ -151,7 +151,7 @@ export const BookingRequestModal: React.FC<BookingRequestModalProps> = ({
                 </div>
                 <div className="flex items-start gap-2.5">
                   <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">1</span>
-                  <span>Our Admissions Coordinator reviews the requested schedule with <strong>{selectedTutor ? selectedTutor.name : 'the matched tutor'}</strong>.</span>
+                  <span>Our Admissions Coordinator reviews the requested schedule and matches a verified educator for <strong>{formData.subject}</strong>.</span>
                 </div>
                 <div className="flex items-start gap-2.5">
                   <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">2</span>
