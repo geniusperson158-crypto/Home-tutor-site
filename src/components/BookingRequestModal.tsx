@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { X, CheckCircle2, ShieldCheck, Calendar, Clock, AlertCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { Tutor, TutoringMode } from '../types';
-import { SUBJECTS_DATA } from '../data/subjects';
 import { BRAND_CONFIG } from '../config/brand';
 
 interface BookingRequestModalProps {
@@ -39,38 +38,23 @@ export const BookingRequestModal: React.FC<BookingRequestModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedReference, setSubmittedReference] = useState<string | null>(null);
 
-  if (!isOpen) return null;
-
-  const daysList = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-  const toggleDay = (day: string) => {
-    if (formData.preferredDays.includes(day)) {
-      if (formData.preferredDays.length > 1) {
-        setFormData({
-          ...formData,
-          preferredDays: formData.preferredDays.filter(d => d !== day)
-        });
-      }
-    } else {
-      setFormData({
-        ...formData,
-        preferredDays: [...formData.preferredDays, day]
-      });
+  useEffect(() => {
+    if (isOpen) {
+      setFormData(prev => ({
+        ...prev,
+        subject: defaultSubject || (selectedTutor?.subjects[0] || prev.subject || 'Mathematics')
+      }));
     }
-  };
+  }, [isOpen, defaultSubject, selectedTutor]);
+
+  if (!isOpen) return null;
 
   const validate = () => {
     const errs: Record<string, string> = {};
     if (!formData.studentName.trim()) errs.studentName = 'Student name is required.';
     if (!formData.parentName.trim()) errs.parentName = 'Parent or guardian name is required.';
-    if (!formData.parentEmail.trim() || !formData.parentEmail.includes('@')) {
-      errs.parentEmail = 'Valid email address is required.';
-    }
     if (!formData.parentPhone.trim() || formData.parentPhone.length < 8) {
       errs.parentPhone = 'Valid contact phone number is required.';
-    }
-    if (formData.mode === 'home' && !formData.address.trim()) {
-      errs.address = 'Street address or neighborhood details are required for home tutoring.';
     }
     setErrors(errs);
     return Object.keys(errs).length === 0;
@@ -111,7 +95,7 @@ export const BookingRequestModal: React.FC<BookingRequestModalProps> = ({
               {formData.isDemoClass ? 'Request a Free Home Demo Class' : 'Schedule Tutoring Consultation'}
             </h2>
             <p className="text-xs text-slate-500">
-              Connect with a certified subject specialist for {formData.subject}
+              {formData.subject ? `Connect with a certified subject specialist for ${formData.subject}` : 'Connect with a certified expert home tutor'}
             </p>
           </div>
           <button
@@ -151,11 +135,11 @@ export const BookingRequestModal: React.FC<BookingRequestModalProps> = ({
                 </div>
                 <div className="flex items-start gap-2.5">
                   <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">1</span>
-                  <span>Our Admissions Coordinator reviews the requested schedule and matches a verified educator for <strong>{formData.subject}</strong>.</span>
+                  <span>Our Admissions Coordinator reviews the requested schedule and matches a verified educator{formData.subject ? <> for <strong>{formData.subject}</strong></> : ''}.</span>
                 </div>
                 <div className="flex items-start gap-2.5">
                   <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">2</span>
-                  <span>We contact you at <strong>{formData.parentPhone}</strong> or <strong>{formData.parentEmail}</strong> to confirm the exact date, home address details, and student diagnostic goals.</span>
+                  <span>We contact you at <strong>{formData.parentPhone}</strong> to confirm the exact date, home address details, and student diagnostic goals.</span>
                 </div>
                 <div className="flex items-start gap-2.5">
                   <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">3</span>
@@ -234,40 +218,6 @@ export const BookingRequestModal: React.FC<BookingRequestModalProps> = ({
                     </select>
                   </div>
                 </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-medium text-slate-700 mb-1">
-                      Subject Needed *
-                    </label>
-                    <select
-                      value={formData.subject}
-                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 cursor-pointer"
-                    >
-                      {SUBJECTS_DATA.map((sub) => (
-                        <option key={sub.id} value={sub.name}>
-                          {sub.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-medium text-slate-700 mb-1">
-                      Learning Mode *
-                    </label>
-                    <select
-                      value={formData.mode}
-                      onChange={(e) => setFormData({ ...formData, mode: e.target.value as TutoringMode })}
-                      className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 cursor-pointer"
-                    >
-                      <option value="home">In-Home Tutoring (At Your Doorstep)</option>
-                      <option value="online">Online 1-on-1 Interactive</option>
-                      <option value="hybrid">Hybrid (Home + Online Practice)</option>
-                    </select>
-                  </div>
-                </div>
               </div>
 
               {/* Parent Contact Details */}
@@ -290,129 +240,39 @@ export const BookingRequestModal: React.FC<BookingRequestModalProps> = ({
                   {errors.parentName && <p className="text-[11px] text-rose-600 mt-1">{errors.parentName}</p>}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-medium text-slate-700 mb-1">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      placeholder="parent@example.com"
-                      value={formData.parentEmail}
-                      onChange={(e) => setFormData({ ...formData, parentEmail: e.target.value })}
-                      className={`w-full px-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 ${errors.parentEmail ? 'border-rose-500 bg-rose-50/30' : 'border-slate-200'}`}
-                    />
-                    {errors.parentEmail && <p className="text-[11px] text-rose-600 mt-1">{errors.parentEmail}</p>}
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-medium text-slate-700 mb-1">
-                      Phone / WhatsApp Number *
-                    </label>
-                    <input
-                      type="tel"
-                      placeholder="+91 98200 12345"
-                      value={formData.parentPhone}
-                      onChange={(e) => setFormData({ ...formData, parentPhone: e.target.value })}
-                      className={`w-full px-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 ${errors.parentPhone ? 'border-rose-500 bg-rose-50/30' : 'border-slate-200'}`}
-                    />
-                    {errors.parentPhone && <p className="text-[11px] text-rose-600 mt-1">{errors.parentPhone}</p>}
-                  </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1">
+                    Phone / WhatsApp Number *
+                  </label>
+                  <input
+                    type="tel"
+                    placeholder="+91 79923 42645"
+                    value={formData.parentPhone}
+                    onChange={(e) => setFormData({ ...formData, parentPhone: e.target.value })}
+                    className={`w-full px-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 ${errors.parentPhone ? 'border-rose-500 bg-rose-50/30' : 'border-slate-200'}`}
+                  />
+                  {errors.parentPhone && <p className="text-[11px] text-rose-600 mt-1">{errors.parentPhone}</p>}
                 </div>
 
-                {/* Address & Neighborhood */}
+                {/* Neighborhood / Area */}
                 {formData.mode !== 'online' && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-medium text-slate-700 mb-1">
-                        Neighborhood / Area *
-                      </label>
-                      <select
-                        value={formData.neighborhood}
-                        onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
-                        className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 cursor-pointer"
-                      >
-                        {BRAND_CONFIG.serviceLocations.map((loc) => (
-                          <option key={loc} value={loc}>
-                            {loc}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-medium text-slate-700 mb-1">
-                        Street Address / Landmark *
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="e.g. Flat 402, Neelkanth Heights, Sector 17, Vashi"
-                        value={formData.address}
-                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                        className={`w-full px-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 ${errors.address ? 'border-rose-500 bg-rose-50/30' : 'border-slate-200'}`}
-                      />
-                      {errors.address && <p className="text-[11px] text-rose-600 mt-1">{errors.address}</p>}
-                    </div>
+                  <div>
+                    <label className="block text-xs font-medium text-slate-700 mb-1">
+                      Neighborhood / Area *
+                    </label>
+                    <select
+                      value={formData.neighborhood}
+                      onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
+                      className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 cursor-pointer"
+                    >
+                      {BRAND_CONFIG.serviceLocations.map((loc) => (
+                        <option key={loc} value={loc}>
+                          {loc}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 )}
-              </div>
-
-              {/* Scheduling Preferences */}
-              <div className="space-y-3 pt-2 border-t border-slate-100">
-                <div className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center justify-between">
-                  <span>3. Preferred Schedule</span>
-                  <span className="text-[11px] font-normal text-slate-500">Select 1 or more convenient days</span>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {daysList.map((day) => {
-                    const isSelected = formData.preferredDays.includes(day);
-                    return (
-                      <button
-                        type="button"
-                        key={day}
-                        onClick={() => toggleDay(day)}
-                        className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all cursor-pointer ${
-                          isSelected
-                            ? 'bg-blue-600 text-white border-blue-600 shadow-2xs'
-                            : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
-                        }`}
-                      >
-                        {day}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">
-                    Preferred Time Window
-                  </label>
-                  <select
-                    value={formData.preferredTimeSlot}
-                    onChange={(e) => setFormData({ ...formData, preferredTimeSlot: e.target.value })}
-                    className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 cursor-pointer"
-                  >
-                    <option value="3:30 PM - 5:30 PM (Early Afternoon)">3:30 PM - 5:30 PM (Early Afternoon)</option>
-                    <option value="5:00 PM - 7:00 PM (Late Afternoon)">5:00 PM - 7:00 PM (Late Afternoon)</option>
-                    <option value="6:30 PM - 8:30 PM (Evening)">6:30 PM - 8:30 PM (Evening)</option>
-                    <option value="Weekend Mornings (9:00 AM - 12:00 PM)">Weekend Mornings (9:00 AM - 12:00 PM)</option>
-                    <option value="Weekend Afternoons (1:00 PM - 5:00 PM)">Weekend Afternoons (1:00 PM - 5:00 PM)</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">
-                    Student's Current Goals or Challenge Areas (Optional)
-                  </label>
-                  <textarea
-                    rows={2}
-                    placeholder="e.g. Maya is preparing for her 10th grade physics midterm and needs help with kinematics formulas."
-                    value={formData.learningGoals}
-                    onChange={(e) => setFormData({ ...formData, learningGoals: e.target.value })}
-                    className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900"
-                  />
-                </div>
               </div>
 
               {/* Action Buttons */}

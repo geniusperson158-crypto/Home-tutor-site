@@ -4,9 +4,10 @@ import { ClipboardList, CalendarCheck, TrendingUp, CheckCircle, ArrowRight } fro
 interface HowItWorksProps {
   onFindTutor?: () => void;
   onBecomeTutor: () => void;
+  onRequestDemo?: () => void;
 }
 
-export const HowItWorks: React.FC<HowItWorksProps> = ({ onBecomeTutor }) => {
+export const HowItWorks: React.FC<HowItWorksProps> = ({ onBecomeTutor, onRequestDemo }) => {
   const [activeTab, setActiveTab] = useState<'parents' | 'tutors'>('parents');
 
   const parentSteps = [
@@ -114,14 +115,37 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ onBecomeTutor }) => {
                     </div>
                   </div>
 
-                  <h3 className="text-base font-bold text-slate-900">
+                  <h3 className="text-base font-bold text-slate-900 mb-2">
                     {step.title}
                   </h3>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    {step.description}
+                  </p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-slate-200/60 flex items-center gap-1.5 text-[11px] font-medium text-slate-500">
-                  <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Step {idx + 1} of {currentSteps.length}</span>
+                <div className="mt-6 pt-4 border-t border-slate-200/60 flex flex-col gap-3">
+                  <div className="flex items-center justify-between text-[11px] font-medium text-slate-500">
+                    <span className="flex items-center gap-1.5">
+                      <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Step {idx + 1} of {currentSteps.length}</span>
+                    </span>
+                    <span className="text-slate-400">45-Min In-Home</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (activeTab === 'parents') {
+                        onRequestDemo?.();
+                      } else {
+                        onBecomeTutor();
+                      }
+                    }}
+                    className="w-full py-2.5 px-3 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl transition-all shadow-xs hover:shadow flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <CalendarCheck className="w-3.5 h-3.5 shrink-0" />
+                    <span>{activeTab === 'parents' ? 'Book Demo' : 'Apply as Tutor'}</span>
+                  </button>
                 </div>
               </div>
             );

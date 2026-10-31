@@ -1,18 +1,18 @@
 export const BRAND_CONFIG = {
   name: "TutorNest",
-  tagline: "Personalized Learning. Right at Your Doorstep.",
+  tagline: "Turn low grades into top marks get your first session completely free!",
   heroSubtitle:
     "Discover trusted home tutors who make learning easier, build confidence, and help every student reach their full potential.",
   announcement: {
-    enabled: true,
+    enabled: false,
     text: "🎉 Limited Time: Book a 100% Free 45-Minute In-Home Demo Class with a Top-Rated Tutor",
     actionLabel: "Claim Free Demo",
   },
   contact: {
-    phone: "+91 98200 55886",
-    phoneDisplay: "+91 98200 55886",
+    phone: "+917992342645",
+    phoneDisplay: "+91 79923 42645",
     email: "pathakamrit291@gmail.com",
-    whatsapp: "919820055886",
+    whatsapp: "917992342645",
     address: "Plot 12, Sector 17, Vashi, Navi Mumbai, Maharashtra 400703",
     serviceHours: "Mon – Sat: 10:00 AM – 9:00 PM",
   },

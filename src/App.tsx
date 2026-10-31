@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { AnnouncementBar } from './components/AnnouncementBar';
 import { Navbar, NavPage } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { TrustStats } from './components/TrustStats';
@@ -12,6 +11,7 @@ import { TestimonialsSection } from './components/TestimonialsSection';
 import { FAQSection } from './components/FAQSection';
 import { Footer } from './components/Footer';
 import { SubjectsView } from './components/SubjectsView';
+import { HappyParentsView } from './components/HappyParentsView';
 import { AboutView } from './components/AboutView';
 import { ContactView } from './components/ContactView';
 import { TutorProfileModal } from './components/TutorProfileModal';
@@ -19,6 +19,7 @@ import { BookingRequestModal } from './components/BookingRequestModal';
 import { BecomeTutorModal } from './components/BecomeTutorModal';
 import { AuthModal } from './components/AuthModal';
 import { PrivacyTermsModal } from './components/PrivacyTermsModal';
+import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 
 import { TUTORS_DATA } from './data/tutors';
 import { Tutor } from './types';
@@ -72,17 +73,16 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleOpenDemoBooking = (tutor?: Tutor | null) => {
+  const handleOpenDemoBooking = (tutor?: Tutor | null, subjectName?: string) => {
     setSelectedTutorForBooking(tutor || null);
+    if (subjectName) {
+      setSearchFilters(prev => ({ ...prev, subject: subjectName }));
+    }
     setBookingModalOpen(true);
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900">
-      
-      {/* 1. Top Announcement Bar */}
-      <AnnouncementBar onOpenDemoRequest={() => handleOpenDemoBooking(null)} />
-
       {/* 2. Top Navigation Bar (3-Zone Contract) */}
       <Navbar
         currentPage={currentPage}
@@ -118,6 +118,7 @@ export default function App() {
                 setCurrentPage('subjects');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
+              onBookDemo={(subName) => handleOpenDemoBooking(null, subName)}
             />
 
             {/* How It Works Section */}
@@ -127,13 +128,19 @@ export default function App() {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               onBecomeTutor={() => setBecomeTutorModalOpen(true)}
+              onRequestDemo={() => handleOpenDemoBooking(null)}
             />
 
             {/* Why Choose Us Section */}
             <WhyChooseUs />
 
             {/* Testimonials Section */}
-            <TestimonialsSection />
+            <TestimonialsSection
+              onViewAllReviews={() => {
+                setCurrentPage('happy-parents');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            />
 
 
             {/* FAQ Accordion */}
@@ -163,6 +170,7 @@ export default function App() {
           <SubjectsView
             onSelectSubjectAndExplore={(subName) => handleSubjectSelectFromGrid(subName)}
             onRequestGeneralDemo={() => handleOpenDemoBooking(null)}
+            onBookDemoForSubject={(subName) => handleOpenDemoBooking(null, subName)}
           />
         )}
 
@@ -175,6 +183,7 @@ export default function App() {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               onBecomeTutor={() => setBecomeTutorModalOpen(true)}
+              onRequestDemo={() => handleOpenDemoBooking(null)}
             />
             <WhyChooseUs />
             <FAQSection
@@ -184,6 +193,13 @@ export default function App() {
               }}
             />
           </div>
+        )}
+
+        {/* Happy Parents (Testimonials & Reviews) Dedicated Page */}
+        {currentPage === 'happy-parents' && (
+          <HappyParentsView
+            onBookDemo={(subName) => handleOpenDemoBooking(null, subName)}
+          />
         )}
 
         {/* About Us Standalone Page */}
@@ -254,6 +270,9 @@ export default function App() {
         type={privacyModalState.type}
         onClose={() => setPrivacyModalState({ isOpen: false, type: 'privacy' })}
       />
+
+      {/* Floating Action WhatsApp */}
+      <FloatingWhatsApp />
 
     </div>
   );

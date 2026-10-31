@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { GraduationCap, Menu, X, User } from 'lucide-react';
 import { BRAND_CONFIG } from '../config/brand';
 
-export type NavPage = 'home' | 'find-tutors' | 'subjects' | 'how-it-works' | 'about-us' | 'contact';
+export type NavPage = 'home' | 'find-tutors' | 'subjects' | 'how-it-works' | 'happy-parents' | 'about-us' | 'contact';
 
 interface NavbarProps {
   currentPage: NavPage;
@@ -29,6 +29,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { label: 'Home', page: 'home' },
     { label: 'Subjects', page: 'subjects' },
     { label: 'How It Works', page: 'how-it-works' },
+    { label: 'Happy Parents', page: 'happy-parents' },
     { label: 'About Us', page: 'about-us' },
     { label: 'Contact', page: 'contact' },
   ];

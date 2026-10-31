@@ -8,13 +8,15 @@ import {
   BookOpen,
   Code2,
   Globe2,
-  Award
+  Award,
+  CalendarCheck
 } from 'lucide-react';
 import { SUBJECTS_DATA } from '../data/subjects';
 
 interface SubjectsViewProps {
   onSelectSubjectAndExplore?: (subjectName: string) => void;
   onRequestGeneralDemo: () => void;
+  onBookDemoForSubject?: (subjectName: string) => void;
 }
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -31,7 +33,8 @@ const ICON_MAP: Record<string, React.ElementType> = {
 
 export const SubjectsView: React.FC<SubjectsViewProps> = ({
   onSelectSubjectAndExplore,
-  onRequestGeneralDemo
+  onRequestGeneralDemo,
+  onBookDemoForSubject
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const categories = ['All', 'STEM', 'Humanities', 'Test Prep'];
@@ -113,9 +116,22 @@ export const SubjectsView: React.FC<SubjectsViewProps> = ({
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-medium">
-                  <span>CBSE · ICSE · State Board · IB</span>
-                  <span className="text-slate-400">Grades 1 – 12</span>
+                <div className="pt-4 border-t border-slate-100 flex flex-col gap-3">
+                  <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
+                    <span>CBSE · ICSE · State Board · IB</span>
+                    <span className="text-slate-400">Grades 1 – 12</span>
+                  </div>
+
+                  <div className="pt-0.5">
+                    <button
+                      type="button"
+                      onClick={() => onBookDemoForSubject?.(subject.name)}
+                      className="w-full py-2 px-3 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl transition-all shadow-xs hover:shadow flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <CalendarCheck className="w-3.5 h-3.5 shrink-0" />
+                      <span>Book Demo</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             );

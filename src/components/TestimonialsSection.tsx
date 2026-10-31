@@ -1,8 +1,11 @@
-import React from 'react';
-import { Star, Quote, CheckCircle, Info } from 'lucide-react';
+import { Star, Quote, CheckCircle, ArrowRight, PenLine } from 'lucide-react';
 import { TESTIMONIALS_DATA } from '../data/testimonials';
 
-export const TestimonialsSection: React.FC = () => {
+interface TestimonialsSectionProps {
+  onViewAllReviews?: () => void;
+}
+
+export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ onViewAllReviews }) => {
   return (
     <section className="py-16 sm:py-24 bg-white border-b border-slate-200/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -21,9 +24,17 @@ export const TestimonialsSection: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-1.5 text-xs text-slate-500 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 self-start md:self-auto">
-            <Info className="w-3.5 h-3.5 text-slate-400" />
-            <span>Illustrative demo testimonials representative of typical outcomes</span>
+          <div className="flex items-center gap-3">
+            {onViewAllReviews && (
+              <button
+                onClick={onViewAllReviews}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-700 bg-blue-50/80 hover:bg-blue-100/80 px-3.5 py-2 rounded-xl transition-colors cursor-pointer whitespace-nowrap"
+              >
+                <PenLine className="w-3.5 h-3.5" />
+                <span>Happy Parents & Write Review</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
         </div>
 

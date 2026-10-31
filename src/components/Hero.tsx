@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, BookOpen, Layers, ShieldCheck, CheckCircle2, Star, ArrowRight } from 'lucide-react';
+import { MapPin, BookOpen, Layers, ShieldCheck, CheckCircle2, Star, ArrowRight, Phone, Calendar } from 'lucide-react';
 import { BRAND_CONFIG } from '../config/brand';
 import { SUBJECTS_DATA } from '../data/subjects';
 
@@ -9,7 +9,7 @@ interface HeroProps {
   onRequestDemo?: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onSearch, onExploreSubjects }) => {
+export const Hero: React.FC<HeroProps> = ({ onSearch, onExploreSubjects, onRequestDemo }) => {
   const [selectedGrade, setSelectedGrade] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
@@ -55,21 +55,31 @@ export const Hero: React.FC<HeroProps> = ({ onSearch, onExploreSubjects }) => {
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-3.5 mb-10">
-              <button
-                onClick={onExploreSubjects}
+              <a
+                href={`tel:${BRAND_CONFIG.contact.phone}`}
+                onClick={() => {
+                  window.location.href = `tel:${BRAND_CONFIG.contact.phone}`;
+                }}
                 className="px-6 py-3.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl transition-all shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/25 cursor-pointer flex items-center gap-2 group"
+                title={`Call ${BRAND_CONFIG.contact.phoneDisplay}`}
               >
-                <span>Explore Subjects</span>
+                <Phone className="w-4 h-4 text-white" />
+                <span>Call Now</span>
+              </a>
+
+              <button
+                type="button"
+                onClick={onRequestDemo}
+                className="ml-3 sm:ml-4 px-6 py-3.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl transition-all shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/25 cursor-pointer flex items-center gap-2 group"
+              >
+                <Calendar className="w-4 h-4 text-white" />
+                <span>Book Demo</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </button>
             </div>
 
             {/* Compact Search Panel */}
             <div className="bg-white rounded-2xl border border-slate-200/90 shadow-lg shadow-slate-200/40 p-4 sm:p-5">
-              <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
-                Quick Tutor Matcher
-              </div>
-              
               <form onSubmit={handleQuickSearch} className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 
                 {/* Grade Level */}

@@ -84,7 +84,6 @@ export const BecomeTutorModal: React.FC<BecomeTutorModalProps> = ({ isOpen, onCl
     const errs: Record<string, string> = {};
     if (step === 1) {
       if (!formData.fullName.trim()) errs.fullName = 'Full legal name is required.';
-      if (!formData.email.trim() || !formData.email.includes('@')) errs.email = 'Valid email is required.';
       if (!formData.phone.trim() || formData.phone.length < 8) errs.phone = 'Contact telephone is required.';
     } else if (step === 2) {
       if (!formData.university.trim()) errs.university = 'Graduating university or college is required.';
@@ -248,34 +247,18 @@ export const BecomeTutorModal: React.FC<BecomeTutorModalProps> = ({ isOpen, onCl
                     {errors.fullName && <p className="text-[11px] text-rose-600 mt-1">{errors.fullName}</p>}
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-medium text-slate-700 mb-1">
-                        Email Address *
-                      </label>
-                      <input
-                        type="email"
-                        placeholder="tutor@university.edu"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className={`w-full px-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 ${errors.email ? 'border-rose-500' : 'border-slate-200'}`}
-                      />
-                      {errors.email && <p className="text-[11px] text-rose-600 mt-1">{errors.email}</p>}
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-medium text-slate-700 mb-1">
-                        Phone Number *
-                      </label>
-                      <input
-                        type="tel"
-                        placeholder="+1 (555) 234-5678"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className={`w-full px-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 ${errors.phone ? 'border-rose-500' : 'border-slate-200'}`}
-                      />
-                      {errors.phone && <p className="text-[11px] text-rose-600 mt-1">{errors.phone}</p>}
-                    </div>
+                  <div>
+                    <label className="block text-xs font-medium text-slate-700 mb-1">
+                      Phone Number *
+                    </label>
+                    <input
+                      type="tel"
+                      placeholder="+91 79923 42645"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      className={`w-full px-3 py-2 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-900 ${errors.phone ? 'border-rose-500' : 'border-slate-200'}`}
+                    />
+                    {errors.phone && <p className="text-[11px] text-rose-600 mt-1">{errors.phone}</p>}
                   </div>
 
                   <div>
