@@ -11,10 +11,10 @@ export const BRAND_CONFIG = {
   contact: {
     phone: "+91 98200 55886",
     phoneDisplay: "+91 98200 55886",
-    email: "admissions@tutornest.com",
+    email: "pathakamrit291@gmail.com",
     whatsapp: "919820055886",
     address: "Plot 12, Sector 17, Vashi, Navi Mumbai, Maharashtra 400703",
-    serviceHours: "Mon – Sat: 8:00 AM – 8:30 PM IST",
+    serviceHours: "Mon – Sat: 10:00 AM – 9:00 PM",
   },
   serviceLocations: [
     "Vashi, Navi Mumbai",
